@@ -1,3 +1,6 @@
 choosenim update self
-choosenim 2.2.8
-nim c -d:release --threads:on -r cpubench.nim
+choosenim 2.2.12
+
+nimble install -g nimlangserver
+
+nim c --mm:none -d:release --threads:on -r cpubench.nim
