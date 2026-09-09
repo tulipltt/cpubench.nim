@@ -20,9 +20,6 @@ var
     target_duration_ms: int64 = 10000
     delta_ms: int64 = 100
 
-let
-    num_procs = countProcessors()
-
 {.compile("countdown.c", "-std=c99 -I. -c -O").}
 
 func countDownToZero(n: int64): int64 {.importc: "countDownToZero".}
@@ -57,6 +54,7 @@ proc threadTask(threadId: int) {.thread.} =
     timings[threadId] = countDownToZeroInMillis(countdown_value)
 
 proc cpubench =
+    let num_procs = countProcessors()
     echo "num_threads = ", num_procs
 
     (countdown_value,duration_ms) = calibrateMainLoop()
@@ -91,12 +89,10 @@ proc cpubench =
         echo ""
         echo "Unstable computer environment detected, exiting."
 
-let iterations: int = 1
-
-if paramCount() == 2:
-    target_duration_ms = parseInt(paramStr(1))
-    delta_ms = parseInt(paramStr(2))
-
-for i in 0..<iterations:
-    if i > 0: echo ""
+# Run the CPU benchmark and handle any exceptions gracefully
+try:
     cpubench()
+except Exception as e:
+    echo "An error occurred: ", e.msg
+finally:
+    echo "Finished CPU benchmark."
