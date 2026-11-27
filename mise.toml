@@ -1,6 +1,6 @@
 [tools]
-nim = "2.4.0"
-upx = "5.3.0"
+nim = "2.4.2"
+upx = "latest"
 
 [tasks.install-langserver]
 run = "nimble install -g nimlangserver"
